@@ -1,27 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 int main(){
-    Arquivo: coleção de bytes armazenados
-    em um dispositivo de armazenamento secundário
+    Arquivo: biblioteca stdio.h
 
-    - disco rígido
-    - CD
-    - DVD
-    - etc
-        
-    Vantagens de se usar arquivos:
-    - Armazenamento durável
-    - Permite armazenar uma grande 
-    quantidade de informação
-    - Acesso concorrente aos dados
+    A lgg C usa um tipo especial
+    de ponteiro para manipular arquivos
+    
+    Forma geral:
+    FILE *nome_ponteiro;
 
-    Cuidado: A Extensão do arquivo
-    não define o seu tipo
-
-    O que define um arquivo é a maneira
-    como os dados estão organizados e as 
-    operações usadas por um programa para
-    processar (ler ou escrever) esse arquivo.
+    É esse ponteiro que controla o
+    fluxo de leitura e escrita dentro
+    de um arquivo
 
     system("pause");
     return 0;

@@ -11,16 +11,17 @@ int main(){
         exit(1);
     }
 
-    int total_gravado, v[5] = {1, 2, 3, 4, 5};
-    //grava todo o array no arquivo (5 posições)
-    total_gravado = fwrite(v, sizeof(int), 5, arq);
-    if(total_gravado != 5){
-        printf("erro na escrita do arquivo!");
+    int total_lido, v[5]; // {1, 2, 3, 4, 5};
+
+    total_lido = fread(v, sizeof(int), 5, arq);
+    if(total_lido != 5){
+        printf("Erro na escrita do arquivo!");
         system("pause");
         exit(1);
     }
     
     fclose(arq);
+    printf("%d, %d, %d, %d, %d\n", v[0], v[1], v[2], v[3], v[4], v[5]);
     system("pause");
     return 0;
 }

@@ -51,13 +51,27 @@ int main(int argc, char *argv[]){
         
         if(buffer_read > 0){
             size = write(fd_target, buffer, buffer_read);
+            if(size < 0){
+                errnum = errno;
+                if(errnum == 4){
+                    size = write(fd_target, buffer, buffer_read);
+                    if(size < 0){
+                        errnum = errno;
+                        printf("Não foi possível gravar no arquivo %s. %s\n", argv[2], strerror(errnum));
+                        exit(1);   
+                    }
+                }else{
+                    printf("Não foi possível gravar no arquivo %s. %s\n", argv[2], strerror(errnum));
+                }
+            }
+
         }
         else if (buffer_read == 0){
-            printf("fim do buffer\n");
+            printf("Fim do arquivo\n");
             break;
         }   
         else 
-            printf("erro\n");
+            printf("%s.\n", strerror(errnum));
     }
 
     close(fd_origin);

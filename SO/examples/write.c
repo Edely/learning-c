@@ -15,8 +15,8 @@ int main(int argc, char *argv[]){
 
     int fd_origin, fd_target, c_fd_target, buffer_read, size, errnum, size_copied;
     char *buffer = (char *) malloc(100 * sizeof(char)); 
-    struct stat *buff_stat;
-    stat(argv[1], buff_stat);
+    struct stat buff_stat;
+    stat(argv[1], &buff_stat);
     
     switch(argc){
         case(3):
@@ -49,7 +49,6 @@ int main(int argc, char *argv[]){
 
     while(1){
         buffer_read = read(fd_origin, buffer, 10);
-        printf("%d\n", buffer_read);
         if(buffer_read > 0){
             size = write(fd_target, buffer, buffer_read);
             if(size < 0){
@@ -69,7 +68,7 @@ int main(int argc, char *argv[]){
 
         }
         else if (buffer_read == 0){
-            printf("%ld bytes copiados do arquivo %s para o arquivo %s.\n", buff_stat->st_size, argv[1], argv[2]);
+            printf("%d bytes copiados do arquivo %s para o arquivo %s.\n", (int) buff_stat.st_size, argv[1], argv[2]);
             break;
         }   
         else{

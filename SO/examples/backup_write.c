@@ -72,7 +72,6 @@ int main(int argc, char *argv[]){
             break;
         }   
         else{
-            printf("aqui\n");
             printf("%s.\n", strerror(errnum));
             exit(1); 
         }

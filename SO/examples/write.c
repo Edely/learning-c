@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h> 
 #include <fcntl.h>
 #include <string.h>
@@ -11,24 +13,23 @@ int main(int argc, char *argv[]){
 
     mode_t mode_creation = S_IRUSR |S_IWUSR | S_IROTH;
 
-    int fd_origin, fd_target, c_fd_target, buffer_read, size, errnum;
+    int fd_origin, fd_target, c_fd_target, buffer_read, size, errnum, size_copied;
     char *buffer = (char *) malloc(100 * sizeof(char)); 
-    char msg_num_files[40];
+    struct stat *buff_stat;
+    stat(argv[1], buff_stat);
     
     switch(argc){
+        case(3):
+            break;
         case(1):
-            strcpy(msg_num_files, "Nenhum arquivo inserido.");
-            break;
+            printf("Programa exige dois arquivos. Finalizando programa. Nenhum arquivo inserido.\n");
+            exit(1);
         case(2):
-            strcpy(msg_num_files, "Apenas um arquivo inserido.");
-            break;
+            printf("Programa exige dois arquivos. Finalizando programa. Apenas um arquivo inserido.\n");
+            exit(1);
         default:
-            strcpy(msg_num_files, "Mais do que dois arquivos inseridos.");
-    }
-
-    if(argc != 3){
-        printf("Programa exige dois arquivos. %s Finalizando programa.\n", msg_num_files);
-        exit(1);
+            printf("Programa exige dois arquivos. Finalizando programa. Mais do que dois arquivos inseridos.\n");
+            exit(1);
     }
     
     fd_origin = open(argv[1], O_RDONLY);
@@ -48,7 +49,7 @@ int main(int argc, char *argv[]){
 
     while(1){
         buffer_read = read(fd_origin, buffer, 10);
-        
+        printf("%d\n", buffer_read);
         if(buffer_read > 0){
             size = write(fd_target, buffer, buffer_read);
             if(size < 0){
@@ -62,16 +63,21 @@ int main(int argc, char *argv[]){
                     }
                 }else{
                     printf("Não foi possível gravar no arquivo %s. %s\n", argv[2], strerror(errnum));
+                    exit(1); 
                 }
             }
 
         }
         else if (buffer_read == 0){
-            printf("Fim do arquivo\n");
+            printf("%ld bytes copiados do arquivo %s para o arquivo %s.\n", buff_stat->st_size, argv[1], argv[2]);
             break;
         }   
-        else 
+        else{
+            printf("aqui\n");
             printf("%s.\n", strerror(errnum));
+            exit(1); 
+        }
+            
     }
 
     close(fd_origin);

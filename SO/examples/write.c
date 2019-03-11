@@ -6,17 +6,29 @@
 #include <fcntl.h>
 #include <string.h>
 #include <errno.h>
+#include <signal.h>
 
 extern int errno;
 
+void send_message(int segundos){
+    printf("copyit: copia em andamento ...\n");
+    alarm(60);
+    signal(SIGALRM, send_message);
+}
+
 int main(int argc, char *argv[]){
+    signal(SIGALRM, send_message);
+    alarm(60);
 
     mode_t mode_creation = S_IRUSR |S_IWUSR | S_IROTH;
 
-    int fd_origin, fd_target, c_fd_target, buffer_read, size, errnum, size_copied;
+    int fd_origin, fd_target, c_fd_target, buffer_read, size, errnum, last_alarm;
     char *buffer = (char *) malloc(100 * sizeof(char)); 
     struct stat buff_stat;
     stat(argv[1], &buff_stat);
+
+    alarm(60);
+    signal(SIGALRM, send_message);
     
     switch(argc){
         case(3):
@@ -35,7 +47,7 @@ int main(int argc, char *argv[]){
     fd_origin = open(argv[1], O_RDONLY);
     if(fd_origin < 0){
         errnum = errno;
-        printf("Não foi possível abrir o arquivo %s. %s\n", argv[1], strerror(errnum));
+        printf("Nao foi possivel abrir o arquivo %s. %s\n", argv[1], strerror(errnum));
         exit(1);
     }
 
@@ -43,7 +55,7 @@ int main(int argc, char *argv[]){
     fd_target = open(argv[2], O_RDWR | O_CREAT, mode_creation);
     if(fd_target < 0){
         errnum = errno;
-        printf("Não foi possível abrir o arquivo %s. %s\n", argv[2], strerror(errnum));
+        printf("Nao foi possivel abrir o arquivo %s. %s\n", argv[2], strerror(errnum));
         exit(1);
     }
 
@@ -57,18 +69,18 @@ int main(int argc, char *argv[]){
                     size = write(fd_target, buffer, buffer_read);
                     if(size < 0){
                         errnum = errno;
-                        printf("Não foi possível gravar no arquivo %s. %s\n", argv[2], strerror(errnum));
+                        printf("Nao foi possivel gravar no arquivo %s. %s\n", argv[2], strerror(errnum));
                         exit(1);   
                     }
                 }else{
-                    printf("Não foi possível gravar no arquivo %s. %s\n", argv[2], strerror(errnum));
+                    printf("Nao foi possivel gravar no arquivo %s. %s\n", argv[2], strerror(errnum));
                     exit(1); 
                 }
             }
 
         }
         else if (buffer_read == 0){
-            printf("%d bytes copiados do arquivo %s para o arquivo %s.\n", (int) buff_stat.st_size, argv[1], argv[2]);
+            printf("%ld bytes copiados do arquivo %s para o arquivo %s.\n", (long int) buff_stat.st_size, argv[1], argv[2]);
             break;
         }   
         else{

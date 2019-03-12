@@ -32,7 +32,6 @@ O programa checa se foi inserido o número correto de argumentos (2) com o coman
     
 No caso de excesso ou falta de argumentos, o programa finaliza informando o erro ao usuário.
 
-
 Alarm 
 
 Para, a cada 60 segundos, informar ao usuário que o programa está realizando uma cópia, foi utilizada uma função recursiva que:
@@ -61,6 +60,39 @@ No caso de falha na abertura do arquivo, o programa finaliza sua execução com 
         printf("Nao foi possivel abrir o arquivo %s. %s\n", argv[2], strerror(errnum));
         exit(1);
     }
+
+Após abertura com sucesso dos dois arquivos, o programa passa a ler os dados do arquivo de origem com a função read.
+    
+    buffer_read = read(fd_origin, buffer, 10);
+
+O retorno desta função indica sucesso no caso de números positivos não nulos, fim da leitura no caso de zero e erro no caso de números negativos.
+
+A medida que lê os buffers do arquivo de origem, o programa escreve estes dados no arquivo de destino com a função write.
+
+    size = write(fd_target, buffer, buffer_read);
+
+Se esta função retornar um valor negativo, o programa é finalizado com erro.
+
+Tanto a leitura quanto escrita ocorrem dentro de um laço intencionalmente infinito que só é quebrado no caso de erro de leitura ou escrita ou quando o program finaliza com sucesso.
+
+        if(buffer_read > 0){
+            ...
+        }
+        else if (buffer_read == 0){
+            ...
+            break;
+        }   
+        else{
+            ...
+            exit(1); 
+        }
+
+
+        if(size < 0){
+            ...
+            exit(1);   
+        }
+
 
 Fechamento dos Arquivos
 

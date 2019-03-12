@@ -26,6 +26,9 @@ Número de Argumentos
 O programa checa se foi inserido o número correto de argumentos (2) com o comando swich
 
     switch(argc)
+    ... 
+        case(3)
+        ....
     
 No caso de excesso ou falta de argumentos, o programa finaliza informando o erro ao usuário.
 
@@ -35,14 +38,29 @@ Alarm
 Para, a cada 60 segundos, informar ao usuário que o programa está realizando uma cópia, foi utilizada uma função recursiva que:
     - Imprime uma mensagem
     - Define um alarm de 60 segundos
-    - Cria um sinal recursivo
+    - Cria um sinal e chama a função novamente
 
 Abertura dos Arquivos
 
-Para abertura do arquivo de origem, foi utilizada a função open, como modo de abertura read only. Em caso de sucesso, o valor retornado pela função é um inteiro positivo - o id do file descriptor relacionado ao arquivo que será copiado. 
+Para abertura do arquivo de origem, foi utilizada a função open, com o modo de abertura read only. Em caso de sucesso, o valor retornado pela função é um inteiro positivo - o id do file descriptor relacionado ao arquivo que será copiado. 
 
     fd_origin = open(argv[1], O_RDONLY);
 
+Já o arquivo de destino foi criado com o modo read and write, bem como O_CREAT, que cria o arquivo caso ele já não exista, com permissão 644
+    
+    mode_t mode_creation = S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+
+    ...
+
+    fd_target = open(argv[2], O_RDWR | O_CREAT, mode_creation);
+
+No caso de falha na abertura do arquivo, o programa finaliza sua execução com um erro. Para identificar a falha, checa se o valor retornado por open é um inteiro positivo, caso contrário, o arquivo não foi aberto corretamente, o erro é identificado, reportado e por fim o programa é finalizado.
+
+    if(fd_target < 0){
+        errnum = errno;
+        printf("Nao foi possivel abrir o arquivo %s. %s\n", argv[2], strerror(errnum));
+        exit(1);
+    }
 
 Fechamento dos Arquivos
 
@@ -81,7 +99,7 @@ int main(int argc, char *argv[]){
     signal(SIGALRM, send_message);
     alarm(60);
 
-    mode_t mode_creation = S_IRUSR |S_IWUSR | S_IROTH;
+    mode_t mode_creation = S_IRUSR | S_IWUSR | S_IROTH;
 
     int fd_origin, fd_target, c_fd_target, buffer_read, size, errnum, last_alarm;
     char *buffer = (char *) malloc(100 * sizeof(char)); 

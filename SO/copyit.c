@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
     signal(SIGALRM, send_message);
     alarm(60);
 
-    mode_t mode_creation = S_IRUSR |S_IWUSR | S_IROTH;
+    mode_t mode_creation = S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
 
     int fd_origin, fd_target, c_fd_target, buffer_read, size, errnum, last_alarm;
     char *buffer = (char *) malloc(100 * sizeof(char)); 
@@ -51,7 +51,6 @@ int main(int argc, char *argv[]){
         exit(1);
     }
 
-    //c_fd_target = creat(argv[2], mode_creation);
     fd_target = open(argv[2], O_RDWR | O_CREAT, mode_creation);
     if(fd_target < 0){
         errnum = errno;

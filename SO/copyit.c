@@ -44,6 +44,11 @@ int main(int argc, char *argv[]){
             exit(1);
     }
     
+    if(buffer == NULL){
+        printf("Erro de alocacao de memoria.\n");
+        exit(1);
+    }
+
     fd_origin = open(argv[1], O_RDONLY);
     if(fd_origin < 0){
         errnum = errno;
@@ -89,6 +94,7 @@ int main(int argc, char *argv[]){
             
     }
 
+    free(buffer);
     close(fd_origin);
     close(fd_target);
     return 0;

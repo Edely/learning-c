@@ -2,3 +2,5 @@ start ls
 wait
 start date
 wait
+start ls -a
+massa

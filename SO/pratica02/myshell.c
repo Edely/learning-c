@@ -16,19 +16,20 @@ int runShell(){
     char *palavras[100];
     FILE *arq;
     arq = fopen("myscript", "r");
-    char *commands = fgets(str, 4096, arq);
-
-
-
-    if(commands == NULL)
-        printf("Erro na Leitura\n");
-    else{
-        printf("myshell>");
-        fflush(stdout);
-        printf("%s", str);
-    }
-
     
+    while(1){
+        fflush(stdout);
+        char *commands = fgets(str, 4096, arq);
+        if(commands == NULL){
+            printf("\nFim do arquivo\n");
+            exit(1);
+        }            
+        else{
+            printf("myshell>");
+            printf("%s", str);
+        }
+    };
+
     fclose(arq);    
     return 0;
 }

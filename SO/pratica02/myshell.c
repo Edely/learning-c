@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 int runShell();
 
@@ -36,11 +37,31 @@ int runShell(){
         //printf("%d\n", npalavras);
        // printf("aqui -> %s\n", palavras[0]);
 
-        //start, wait, kill, stop, continue, run
+        //start, wait, kill, stop, continue, runc
+        char *command[4026];
+        int i = 1;
+        int j = 0;
+
+        while(palavras[i] != 0){
+            //printf("palavra %s\n",palavras[i]);
+            command[j] = palavras[i];
+            j++;
+            i++;
+        };
+
+        //printf("command %s\n", command);
+
         if(strncmp(palavras[0], "wait", 4) == 0){
             printf("comando wait\n");
         }else if(strncmp(palavras[0], "start", 5) == 0){
+
             printf("comando start\n");
+            if(fork()==0){
+                execvp(palavras[0], command);
+            }else{
+                printf("Não foi possível criar o processo");
+                exit(1);
+            }
         }else if(strncmp(palavras[0], "kill", 4) == 0){
             printf("comando kill\n");
         }else if(strncmp(palavras[0], "stop", 4) == 0){

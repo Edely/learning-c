@@ -56,11 +56,9 @@ int runShell(){
         }else if(strncmp(palavras[0], "start", 5) == 0){
 
             printf("comando start\n");
-            if(fork()==0){
+            if(fork()!=0){
                 execvp(palavras[0], command);
-            }else{
-                printf("Não foi possível criar o processo");
-                exit(1);
+                printf("Hello from Child!\n"); 
             }
         }else if(strncmp(palavras[0], "kill", 4) == 0){
             printf("comando kill\n");

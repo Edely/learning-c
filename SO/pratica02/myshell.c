@@ -16,34 +16,25 @@ int runShell(){
 
     char str[4096];
     char *token;
-    int vez = 0;
     while (1){
         printf("\nmyshell>");
         fgets(str, 4096, stdin);
-        fflush(stdout);
-        //printf("%s\n", str);
-        fflush(stdout);
+        fflush(stdout);        
+        token = strtok(str, " ");
 
         char *palavras[100];
-        int npalavras = 0;        
-        if( vez == 0)
-            token = strtok(str, "\t\n");
-        else
-            token = strtok(0, "\t\n");
-
-        vez++;  
-        printf("%s token\n", token);
+        int npalavras = 0;  
 
         while( token != NULL ) {
-            palavras[npalavras] = token;             
-           
+            palavras[npalavras] = token;
+            token = strtok(NULL, " ");
             npalavras++;
         }
 
         palavras[npalavras] = 0;
         printf("%s palavra[0]\n", palavras[0]);
         printf("%c npalavras\n", npalavras);
-        
+
         //start, wait, kill, stop, continue, runc        
         char *command[4026];
         int i = 1;
@@ -89,6 +80,5 @@ int runShell(){
         }        
     }
 
-    //fclose(arq);    
     return 0;
 }

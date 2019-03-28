@@ -61,7 +61,11 @@ int runShell(){
 
         }else if(strncmp(palavras[0], "start", 5) == 0){
             if(fork()!=0){
+                printf("%s command\n",command[0]);
+                printf("%s cmd\n",cmd);
                 execvp(cmd, command);
+            }else{
+                exit(1);
             }
 
         }else if(strncmp(palavras[0], "kill", 4) == 0){

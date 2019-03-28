@@ -16,63 +16,79 @@ int runShell(){
 
     char str[4096];
     char *token;
-    FILE *arq;
-    arq = fopen("myscript", "r");
+    int vez = 0;
     while (1){
-        printf("myshell>");
+        printf("\nmyshell>");
         fgets(str, 4096, stdin);
         fflush(stdout);
-        printf("%s\n", str);
+        //printf("%s\n", str);
         fflush(stdout);
+
         char *palavras[100];
-        int npalavras = 0;
-        token = strtok(str, " ");
+        int npalavras = 0;        
+        if( vez == 0)
+            token = strtok(str, "\t\n");
+        else
+            token = strtok(0, "\t\n");
+
+        vez++;  
+        printf("%s token\n", token);
+
         while( token != NULL ) {
-            //printf( "%s\n", token );
-            palavras[npalavras] = token;               
-            token = strtok(0, " ");
+            palavras[npalavras] = token;             
+           
             npalavras++;
         }
-        palavras[npalavras] = 0;
-        //printf("%d\n", npalavras);
-       // printf("aqui -> %s\n", palavras[0]);
 
-        //start, wait, kill, stop, continue, runc
+        palavras[npalavras] = 0;
+        printf("%s palavra[0]\n", palavras[0]);
+        printf("%c npalavras\n", npalavras);
+        
+        //start, wait, kill, stop, continue, runc        
         char *command[4026];
         int i = 1;
         int j = 0;
 
         while(palavras[i] != 0){
-            //printf("palavra %s\n",palavras[i]);
             command[j] = palavras[i];
             j++;
             i++;
         };
 
-        //printf("command %s\n", command);
+        char *cmd = palavras[1];
 
         if(strncmp(palavras[0], "wait", 4) == 0){
             printf("comando wait\n");
+
         }else if(strncmp(palavras[0], "start", 5) == 0){
 
-            printf("comando start\n");
+            // printf("comando start\n");
             if(fork()!=0){
-                execvp(palavras[0], command);
+                printf("%s command\n",command[0]);
+                printf("%s cmd\n",cmd);
+
+                //execvp(cmd, command);
                 printf("Hello from Child!\n"); 
             }
+
         }else if(strncmp(palavras[0], "kill", 4) == 0){
             printf("comando kill\n");
+
         }else if(strncmp(palavras[0], "stop", 4) == 0){
             printf("comando stop\n");
+
         }else if(strncmp(palavras[0], "continue", 8) == 0){
             printf("comando continue\n");
+
         }else if(strncmp(palavras[0], "run", 3) == 0){
             printf("comando run\n");
+
         }else{
             printf("comando n existe\n");
+
         }        
     }
 
-    fclose(arq);    
+    //fclose(arq);    
     return 0;
 }

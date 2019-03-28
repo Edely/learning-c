@@ -18,9 +18,9 @@ int runShell(){
     char *token;
     FILE *arq;
     arq = fopen("myscript", "r");
-    
-    while(fgets(str, 4096, arq)){
+    while (1){
         printf("myshell>");
+        fgets(str, 4096, stdin);
         fflush(stdout);
         printf("%s\n", str);
         fflush(stdout);
@@ -71,7 +71,7 @@ int runShell(){
         }else{
             printf("comando n existe\n");
         }        
-    };
+    }
 
     fclose(arq);    
     return 0;

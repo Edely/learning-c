@@ -19,22 +19,23 @@ int runShell(){
     while (1){
         printf("\nmyshell>");
         fgets(str, 4096, stdin);
-        fflush(stdout);        
-        token = strtok(str, " ");
+        fflush(stdout); 
+        // char delim[2];
+        // delim = [' ', '\n'];       
+        token = strtok(str, " \n");
 
         char *palavras[100];
         int npalavras = 0;  
 
         while( token != NULL ) {
+            //printf("%s", token);
             palavras[npalavras] = token;
-            token = strtok(NULL, " ");
+            token = strtok(NULL, " \n");
             npalavras++;
         }
 
         palavras[npalavras] = 0;
-        printf("%s palavra[0]\n", palavras[0]);
-        printf("%c npalavras\n", npalavras);
-
+        
         //start, wait, kill, stop, continue, runc        
         char *command[4026];
         int i = 1;
@@ -45,6 +46,13 @@ int runShell(){
             j++;
             i++;
         };
+        command[j] = NULL;
+
+        int m = 0;
+        while(command[m] != NULL){
+            //printf("%s aqui\n", command[m]);
+            m++;        
+        };
 
         char *cmd = palavras[1];
 
@@ -52,14 +60,8 @@ int runShell(){
             printf("comando wait\n");
 
         }else if(strncmp(palavras[0], "start", 5) == 0){
-
-            // printf("comando start\n");
             if(fork()!=0){
-                printf("%s command\n",command[0]);
-                printf("%s cmd\n",cmd);
-
-                //execvp(cmd, command);
-                printf("Hello from Child!\n"); 
+                execvp(cmd, command);
             }
 
         }else if(strncmp(palavras[0], "kill", 4) == 0){

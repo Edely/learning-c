@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 int runShell();
 
@@ -13,22 +15,21 @@ int main(){
 }
 
 int runShell(){
-
-    char str[4096];
-    char *token;
     while (1){
-        printf("\nmyshell>");
+        char str[4096];
+        char *token;
+        
+        
+        fflush(stdout);
+        printf("myshell>");
+        fflush(stdout);
         fgets(str, 4096, stdin);
-        fflush(stdout); 
-        // char delim[2];
-        // delim = [' ', '\n'];       
         token = strtok(str, " \n");
 
         char *palavras[100];
         int npalavras = 0;  
 
         while( token != NULL ) {
-            //printf("%s", token);
             palavras[npalavras] = token;
             token = strtok(NULL, " \n");
             npalavras++;
@@ -50,24 +51,20 @@ int runShell(){
 
         int m = 0;
         while(command[m] != NULL){
-            //printf("%s aqui\n", command[m]);
             m++;        
         };
 
         char *cmd = palavras[1];
 
         if(strncmp(palavras[0], "wait", 4) == 0){
-            printf("comando wait\n");
-
+            wait(0);
         }else if(strncmp(palavras[0], "start", 5) == 0){
-            if(fork()!=0){
-                printf("%s command\n",command[0]);
-                printf("%s cmd\n",cmd);
+            pid_t pid = fork();
+            if(pid==0){      
                 execvp(cmd, command);
-            }else{
-                exit(1);
+            }else if(pid > 0){
+                wait(0);
             }
-
         }else if(strncmp(palavras[0], "kill", 4) == 0){
             printf("comando kill\n");
 
@@ -78,11 +75,14 @@ int runShell(){
             printf("comando continue\n");
 
         }else if(strncmp(palavras[0], "run", 3) == 0){
-            printf("comando run\n");
-
+            pid_t pid = fork();
+            if(pid==0){      
+                execvp(cmd, command);
+            }else if(pid > 0){
+                wait(0);
+            }
         }else{
             printf("comando n existe\n");
-
         }        
     }
 
